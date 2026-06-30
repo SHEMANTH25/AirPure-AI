@@ -30,7 +30,7 @@ def create_background():
 
     background = df[FEATURE_NAMES].sample(
         n=20,
-        random_state=42
+        random_state=5
     )
 
     return background
