@@ -49,18 +49,23 @@ def create_background():
     return background
 def create_explainer(model, scaler_x):
 
+    # Load background data
     background = scaler_x.transform(
         create_background()
     )
 
-    explainer = shap.KernelExplainer(
-
-        predict_function(model),
-
-        background
-
+    # Reshape for LSTM
+    background = background.reshape(
+        background.shape[0],
+        1,
+        background.shape[1]
     )
 
+    # Create SHAP DeepExplainer
+    explainer = shap.DeepExplainer(
+        model,
+        background
+    )
     return explainer
 def generate_shap_plot(
 
@@ -76,38 +81,42 @@ def generate_shap_plot(
             os.makedirs("static")
 
         explainer = create_explainer(
-
             model,
-
             scaler_x
-
         )
 
-        shap_values = explainer.shap_values(
-
-            sample_scaled,
-
-            nsamples=20
-
+        # Reshape input for LSTM
+        sample = sample_scaled.reshape(
+            sample_scaled.shape[0],
+            1,
+            sample_scaled.shape[1]
         )
 
+        # Generate SHAP values using DeepExplainer
+        shap_values = explainer.shap_values(sample)
+
+        # Handle DeepExplainer output
         if isinstance(shap_values, list):
             values = shap_values[0]
         else:
             values = shap_values
+
+        # Remove batch dimension if present
+        if values.ndim == 3:
+            values = values[0]
+
         # ==========================================
         # Calculate SHAP Importance
         # ==========================================
 
+        # Calculate feature importance
         if values.ndim == 1:
             importance = np.abs(values)
         else:
-            importance = np.abs(values[0])
+            importance = np.mean(np.abs(values), axis=0)
 
         sorted_index = np.argsort(importance)[::-1]
-
         feature_names = np.array(FEATURE_NAMES)[sorted_index]
-
         importance = importance[sorted_index]
 
         # ==========================================
@@ -115,31 +124,18 @@ def generate_shap_plot(
         # ==========================================
 
         colors = [
-
             "#ff1744",  # Red
-
             "#ff9100",  # Orange
-
             "#ffd600",  # Yellow
-
             "#00c853",  # Green
-
             "#00b8d4",  # Cyan
-
             "#2979ff",  # Blue
-
             "#651fff",  # Purple
-
             "#d500f9",  # Pink
-
             "#795548",  # Brown
-
             "#607d8b",  # Blue Grey
-
             "#9e9e9e",  # Grey
-
             "#cfd8dc"   # Light Grey
-
         ]
 
         # ==========================================
@@ -147,21 +143,13 @@ def generate_shap_plot(
         # ==========================================
 
         plt.figure(figsize=(9,5))
-
         bars = plt.barh(
-
             feature_names,
-
             importance,
-
             color=colors[:len(feature_names)],
-
             edgecolor="black",
-
             linewidth=1
-
         )
-
         plt.gca().invert_yaxis()
 
         # ==========================================
@@ -174,13 +162,11 @@ def generate_shap_plot(
             fontweight="bold",
             pad=20
         )
-
         plt.xlabel(
             "SHAP Value",
             fontsize=14,
             fontweight="bold"
         )
-
         plt.ylabel(
             "Air Pollutants",
             fontsize=14,
@@ -192,13 +178,12 @@ def generate_shap_plot(
             linestyle="--",
             alpha=0.35
         )
-        
 
         for bar in bars:
             width = bar.get_width()
             plt.text(
                 width + 0.001,
-                bar.get_y() + bar.get_height()/2,
+                bar.get_y() + bar.get_height() / 2,
                 f"{width:.4f}",
                 va="center",
                 fontsize=10,
@@ -215,15 +200,12 @@ def generate_shap_plot(
         plt.close()
 
         top_features = []
-
         for rank, i in enumerate(sorted_index[:5]):
-
             if values.ndim == 1:
                 score = float(np.abs(values[i]))
             else:
-                score = float(np.abs(values[0][i]))
+                score = float(np.mean(np.abs(values[:, i])))
 
-            # Rank-based impact
             if rank == 0:
                 impact = "Very High"
             elif rank == 1:
@@ -242,7 +224,6 @@ def generate_shap_plot(
             })
 
         return values, top_features
-
     except Exception as e:
         print("SHAP Error:", e)
         return None, [
