@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result | AirPure AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/predict_manually">Analyze Air Quality</a>
+            <a href="/training_performance">Training Performance</a>
+        </nav>
+
+        <div class="glass-card result-container">
+            <h1>Analysis Complete</h1>
+            <p class="lead">Our LSTM Neural Network has determined the air quality category.</p>
+            
+            <div class="aqi-value" style="font-size: 4rem;">{{ confidence }}%</div>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Model Prediction Confidence</p>
+            
+            {% set status_class = "" %}
+            {% if result == 'Good' %}{% set status_class = "good" %}
+            {% elif result == 'Satisfactory' %}{% set status_class = "satisfactory" %}
+            {% elif result == 'Moderate' %}{% set status_class = "moderate" %}
+            {% elif result == 'Poor' %}{% set status_class = "poor" %}
+            {% elif result == 'Very Poor' %}{% set status_class = "verypoor" %}
+            {% else %}{% set status_class = "severe" %}{% endif %}
+
+            <div class="aqi-label {{ status_class }}">{{ result }}</div>
+            
+            <p class="conclusion">{{ conclusion }}</p>
+
+            <div style="margin-top: 3rem;">
+                <a href="/predict_manually" class="btn btn-primary">New Analysis</a>
+            </div>
+        </div>
+        </div>
+
+<!-- ========================= -->
+<!-- SHAP Dashboard -->
+<!-- ========================= -->
+
+<div class="glass-card" style="margin-top:40px;">
+
+    <h2>SHAP Feature Importance Analysis</h2>
+
+    <p style="color:#9ca3af;">
+        This chart explains how each pollutant influenced the current AQI prediction.
+    </p>
+
+    <img
+    src="{{ url_for('static', filename=shap_image) }}"
+    alt="SHAP Feature Importance"
+    style="
+        width:100%;
+        max-width:900px;
+        height:auto;
+        display:block;
+        margin:20px auto;
+        border-radius:15px;
+        object-fit:contain;
+    "
+>
+
+    <hr style="margin:35px 0;">
+
+    <h2>Top 5 Contributing Pollutants</h2>
+
+    {% for feature in top_features %}
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        padding:12px;
+        margin-top:10px;
+        background:#1b1b1b;
+        border-radius:10px;
+    ">
+
+        <strong>{{ feature.name }}</strong>
+
+        <span>
+
+            SHAP: {{ feature.value }}
+
+            |
+
+            {{ feature.impact }}
+
+        </span>
+
+    </div>
+
+    {% endfor %}
+
+    <hr style="margin:35px 0;">
+
+    <h2>AI Explanation</h2>
+
+    <p style="
+        line-height:1.8;
+        font-size:17px;
+    ">
+        {{ explanation }}
+    </p>
+
+</div>
+
+</div>
+</body>
+</html>

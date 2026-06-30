@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Detect | AirPure AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/predict_manually">Manual Predict</a>
+            <a href="/predict_automatically" class="active">Auto Detect</a>
+            <a href="/heatmap">Heatmap</a>
+        </nav>
+
+        <div class="glass-card">
+            <h1>Auto Detect</h1>
+            <p class="lead">Enter a city name to fetch real-time pollution data and predict AQI using LSTM.</p>
+            
+            <form action="/predict_automatically" method="post">
+                <div class="form-group" style="max-width: 600px; margin: 0 auto 2rem;">
+                    <label for="city_name">City Name</label>
+                    <input type="text" class="form-control" id="city_name" name="city_name" placeholder="e.g. London, Delhi, New York" required>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary btn-block" style="max-width: 600px;">Detect Real-time Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

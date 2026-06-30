@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirPure AI | Smart AQI Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="active">Home</a>
+            <a href="/predict_manually">Analyze Air Quality</a>
+            <a href="/training_performance">Training Performance</a>
+        </nav>
+
+        <section class="hero glass-card">
+            <h1>AirPure AI</h1>
+            <p class="lead">Harnessing LSTM Neural Networks to provide real-time air quality insights with state-of-the-art precision.</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>LSTM Powered</h3>
+                    <p>Advanced Recurrent Neural Networks designed for time-series prediction.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Global Coverage</h3>
+                    <p>Integrated with OpenWeather API for automatic real-time detection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Results</h3>
+                    <p>Get precise AQI buckets and health recommendations in milliseconds.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <a href="/predict_manually" class="btn btn-primary">Start Analysis</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

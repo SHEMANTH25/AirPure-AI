@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Prediction | AirPure AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/predict_manually" class="active">Analyze Air Quality</a>
+            <a href="/training_performance">Training Performance</a>
+        </nav>
+
+        <div class="glass-card">
+            <h1>Atmospheric Analysis</h1>
+            <p class="lead">Enter the concentration values for all 12 pollutants. Use <strong>test.csv</strong> for sample data.</p>
+            
+            <form action="/predict_manually" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="PM2.5">PM2.5 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="PM2.5" placeholder="e.g. 45.4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="PM10">PM10 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="PM10" placeholder="e.g. 81.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="NO">NO (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="NO" placeholder="e.g. 17.4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="NO2">NO2 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="NO2" placeholder="e.g. 28.6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="NOx">NOx (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="NOx" placeholder="e.g. 32.3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="NH3">NH3 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="NH3" placeholder="e.g. 23.4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="CO">CO (mg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="CO" placeholder="e.g. 2.25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="SO2">SO2 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="SO2" placeholder="e.g. 14.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="O3">O3 (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="O3" placeholder="e.g. 34.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Benzene">Benzene (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="Benzene" placeholder="e.g. 3.28" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Toluene">Toluene (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="Toluene" placeholder="e.g. 8.70" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Xylene">Xylene (µg/m³)</label>
+                        <input type="number" step="0.01" class="form-control" name="Xylene" placeholder="e.g. 3.07" required>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary btn-block">Analyze Atmosphere</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

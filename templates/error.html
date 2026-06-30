@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | AirPure AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/predict_manually">Manual Predict</a>
+            <a href="/predict_automatically">Auto Detect</a>
+            <a href="/heatmap">Heatmap</a>
+        </nav>
+
+        <div class="glass-card result-container">
+            <h1 style="background: linear-gradient(to right, #ef4444, #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Oops! Error {{ error_code }}</h1>
+            <p class="lead">{{ error }}</p>
+            
+            <div style="margin-top: 3rem;">
+                <a href="/" class="btn btn-primary">Return Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
