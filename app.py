@@ -1,81 +1,185 @@
-from flask import Flask, request, jsonify, render_template
-import joblib
+from flask import Flask, request, render_template
+try:
+    import joblib
+except ImportError:
+    print("Warning: joblib not installed. Install with: pip install joblib")
+    joblib = None
 import numpy as np
 from tensorflow.keras.models import load_model
 from shap_utils import build_results
 
 app = Flask(__name__)
 
-# Load your trained LSTM model and artifacts
-# Note: Load model only if it exists, otherwise provide a dummy for now
+# --------------------------------------------------
+# Load Model and Required Files
+# --------------------------------------------------
+
 try:
-    model = load_model('airquality_lstm.h5')
-    scaler_x = joblib.load('scaler_x.joblib')
-    label_encoder = joblib.load('label_encoder.joblib')
-except:
-    print("Model or scalers not found. Please run train_lstm.py first.")
+    print("Loading AirPure AI Model...")
 
-@app.route('/')
+    model = load_model("airquality_lstm.h5")
+    scaler_x = joblib.load("scaler_x.joblib")
+    label_encoder = joblib.load("label_encoder.joblib")
+
+    print("Model Loaded Successfully!")
+
+except Exception as e:
+    print("=" * 60)
+    print("MODEL LOADING ERROR")
+    print(e)
+    print("=" * 60)
+    raise
+
+
+# --------------------------------------------------
+# Home Page
+# --------------------------------------------------
+
+@app.route("/")
 def home():
-    return render_template('home.html')
+    return render_template("home.html")
 
-@app.route('/training_performance')
+
+# --------------------------------------------------
+# Training Performance
+# --------------------------------------------------
+
+@app.route("/training_performance")
 def training_performance():
-    return render_template('training_performance.html')
+    return render_template("training_performance.html")
 
-@app.route('/predict_manually', methods=['POST','GET'])
+
+# --------------------------------------------------
+# Manual Prediction
+# --------------------------------------------------
+
+@app.route("/predict_manually", methods=["GET", "POST"])
 def predict_manually():
-    if request.method == 'POST':
-        # Extract 12 features from form
-        try:
-            features_list = [
-                float(request.form['PM2.5']), float(request.form['PM10']),
-                float(request.form['NO']), float(request.form['NO2']),
-                float(request.form['NOx']), float(request.form['NH3']),
-                float(request.form['CO']), float(request.form['SO2']),
-                float(request.form['O3']), float(request.form['Benzene']),
-                float(request.form['Toluene']), float(request.form['Xylene'])
-            ]
-        except ValueError:
-            return render_template('error.html', error="Invalid input. Please enter numeric values for all 12 pollutants.", error_code=400), 400
 
-        # Prepare data for prediction
-        sample = np.array([features_list])
-        
-        # Scale and Reshape
-        sample_scaled = scaler_x.transform(sample)
-        sample_reshaped = sample_scaled.reshape((1, 1, 12))
-        
-        # Predict Classification
-        return build_results(
+    if request.method == "GET":
+        return render_template("index.html")
 
-    model=model,
+    try:
 
-    sample_reshaped=sample_reshaped,
+        features_list = [
 
-    sample_scaled=sample_scaled,
+            float(request.form["PM2.5"]),
+            float(request.form["PM10"]),
+            float(request.form["NO"]),
+            float(request.form["NO2"]),
+            float(request.form["NOx"]),
+            float(request.form["NH3"]),
+            float(request.form["CO"]),
+            float(request.form["SO2"]),
+            float(request.form["O3"]),
+            float(request.form["Benzene"]),
+            float(request.form["Toluene"]),
+            float(request.form["Xylene"])
 
-    scaler_x=scaler_x,
+        ]
 
-    label_encoder=label_encoder,
+    except ValueError:
 
-    get_health_advice=get_health_advice,
+        return render_template(
 
-    render_template=render_template
+            "error.html",
 
-)
-    return render_template("index.html")
+            error="Please enter valid numeric values for all pollutants.",
+
+            error_code=400
+
+        ), 400
+
+    # ------------------------------------------
+    # Validation
+    # ------------------------------------------
+
+    if any(value < 0 for value in features_list):
+
+        return render_template(
+
+            "error.html",
+
+            error="Negative pollutant values are not allowed.",
+
+            error_code=400
+
+        ), 400
+
+    sample = np.array([features_list])
+
+    sample_scaled = scaler_x.transform(sample)
+
+    sample_reshaped = sample_scaled.reshape((1, 1, 12))
+
+    return build_results(
+
+        model=model,
+
+        sample_reshaped=sample_reshaped,
+
+        sample_scaled=sample_scaled,
+
+        scaler_x=scaler_x,
+
+        label_encoder=label_encoder,
+
+        get_health_advice=get_health_advice,
+
+        render_template=render_template
+
+    )
+
+
+# --------------------------------------------------
+# Health Advice
+# --------------------------------------------------
 
 def get_health_advice(bucket):
-    advice = {
-        'Good': 'The Air Quality Index is excellent. It poses little or no risk to human health. Enjoy your outdoor activities!',
-        'Satisfactory': 'The Air Quality Index is satisfactory, but there may be a minor risk for highly sensitive individuals.',
-        'Moderate': 'Moderate health risk. Sensitive individuals should consider limiting prolonged outdoor exertion.',
-        'Poor': 'Health warnings of emergency conditions. Everyone may begin to experience health effects.',
-        'Very Poor': 'Health alert: everyone may experience more serious health effects. Avoid outdoor activities.',
-        'Severe': 'Emergency condition: the entire population is likely to be affected. Stay indoors and keep windows closed.'
-    }
-    return advice.get(bucket, 'Please check local health guidelines.')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    advice = {
+
+        "Good":
+            "The Air Quality Index is excellent. It poses little or no risk to human health. Enjoy outdoor activities.",
+
+        "Satisfactory":
+            "Air quality is acceptable. Sensitive individuals should limit prolonged outdoor exposure.",
+
+        "Moderate":
+            "People with respiratory conditions should reduce prolonged outdoor activity.",
+
+        "Poor":
+            "Everyone may begin to experience health effects. Consider limiting outdoor exposure.",
+
+        "Very Poor":
+            "Health alert. Everyone may experience more serious health effects. Stay indoors if possible.",
+
+        "Severe":
+            "Emergency conditions. Stay indoors, wear a mask if going outside, and keep windows closed."
+
+    }
+
+    return advice.get(
+
+        bucket,
+
+        "Please follow your local health guidelines."
+
+    )
+
+
+# --------------------------------------------------
+# Run Flask
+# --------------------------------------------------
+
+if __name__ == "__main__":
+
+    app.run(
+
+        host="0.0.0.0",
+
+        port=5000,
+
+        debug=True
+
+    )

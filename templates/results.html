@@ -1,114 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Analysis Result | AirPure AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
-    <div class="container">
-        <nav>
-            <a href="/">Home</a>
-            <a href="/predict_manually">Analyze Air Quality</a>
-            <a href="/training_performance">Training Performance</a>
-        </nav>
 
-        <div class="glass-card result-container">
-            <h1>Analysis Complete</h1>
-            <p class="lead">Our LSTM Neural Network has determined the air quality category.</p>
-            
-            <div class="aqi-value" style="font-size: 4rem;">{{ confidence }}%</div>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Model Prediction Confidence</p>
-            
-            {% set status_class = "" %}
-            {% if result == 'Good' %}{% set status_class = "good" %}
-            {% elif result == 'Satisfactory' %}{% set status_class = "satisfactory" %}
-            {% elif result == 'Moderate' %}{% set status_class = "moderate" %}
-            {% elif result == 'Poor' %}{% set status_class = "poor" %}
-            {% elif result == 'Very Poor' %}{% set status_class = "verypoor" %}
-            {% else %}{% set status_class = "severe" %}{% endif %}
+<div class="container">
 
-            <div class="aqi-label {{ status_class }}">{{ result }}</div>
-            
-            <p class="conclusion">{{ conclusion }}</p>
+    <!-- ========================= -->
+    <!-- Navigation -->
+    <!-- ========================= -->
 
-            <div style="margin-top: 3rem;">
-                <a href="/predict_manually" class="btn btn-primary">New Analysis</a>
+    <nav>
+
+        <a href="/">Home</a>
+
+        <a href="/predict_manually">
+            Analyze Air Quality
+        </a>
+
+        <a href="/training_performance">
+            Training Performance
+        </a>
+
+    </nav>
+
+    <!-- ========================= -->
+    <!-- Result Card -->
+    <!-- ========================= -->
+
+    <div class="glass-card result-container">
+
+        <h1>Atmospheric Analysis Complete</h1>
+
+        <p class="lead">
+
+            AirPure AI has analyzed the atmospheric pollutants
+            using an LSTM Deep Learning model.
+
+        </p>
+
+        <!-- Confidence -->
+
+        <div class="aqi-value"
+             style="font-size:4rem;">
+
+            {{ confidence }}%
+
+        </div>
+
+        <p style="color:var(--text-muted);">
+
+            Model Prediction Confidence
+
+        </p>
+
+        <!-- Animated Confidence Bar -->
+
+        <div class="confidence-bar">
+
+            <div
+                class="confidence-fill"
+                data-confidence="{{ confidence|default(0)|int }}"
+                style="width:0%;">
+
             </div>
+
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const fill = document.querySelector('.confidence-fill[data-confidence]');
+                if (fill) {
+                    const value = Number(fill.dataset.confidence);
+                    if (!Number.isNaN(value)) {
+                        fill.style.width = Math.min(Math.max(value, 0), 100) + '%';
+                    }
+                }
+            });
+        </script>
+
+        <br>
+
+        <small style="color:#9ca3af;">
+
+            Generated using
+            <strong>LSTM + SHAP Explainable AI</strong>
+
+        </small>
+
+        <br><br>
+
+        {% set status_class = "" %}
+
+        {% if result == 'Good' %}
+
+            {% set status_class = "good" %}
+
+        {% elif result == 'Satisfactory' %}
+
+            {% set status_class = "satisfactory" %}
+
+        {% elif result == 'Moderate' %}
+
+            {% set status_class = "moderate" %}
+
+        {% elif result == 'Poor' %}
+
+            {% set status_class = "poor" %}
+
+        {% elif result == 'Very Poor' %}
+
+            {% set status_class = "verypoor" %}
+
+        {% else %}
+
+            {% set status_class = "severe" %}
+
+        {% endif %}
+
+        <div class="aqi-label {{ status_class }}">
+
+            {{ result }}
+
         </div>
 
-<!-- ========================= -->
-<!-- SHAP Dashboard -->
-<!-- ========================= -->
+        <div class="glass-card"
+             style="margin-top:25px;">
 
-<div class="glass-card" style="margin-top:40px;">
+            <h3>Health Recommendation</h3>
 
-    <h2>SHAP Feature Importance Analysis</h2>
+            <p class="conclusion">
 
-    <p style="color:#9ca3af;">
-        This chart explains how each pollutant influenced the current AQI prediction.
-    </p>
+                {{ conclusion }}
 
-    <img
-    src="{{ url_for('static', filename=shap_image) }}"
-    alt="SHAP Feature Importance"
-    style="
-        width:100%;
-        max-width:900px;
-        height:auto;
-        display:block;
-        margin:20px auto;
-        border-radius:15px;
-        object-fit:contain;
-    "
->
+            </p>
 
-    <hr style="margin:35px 0;">
+        </div>
 
-    <h2>Top 5 Contributing Pollutants</h2>
+        <br>
 
-    {% for feature in top_features %}
+        <a href="/predict_manually"
+           class="btn btn-primary">
 
-    <div style="
-        display:flex;
-        justify-content:space-between;
-        padding:12px;
-        margin-top:10px;
-        background:#1b1b1b;
-        border-radius:10px;
-    ">
+            🔄 Analyze Another Sample
 
-        <strong>{{ feature.name }}</strong>
-
-        <span>
-
-            SHAP: {{ feature.value }}
-
-            |
-
-            {{ feature.impact }}
-
-        </span>
+        </a>
 
     </div>
 
-    {% endfor %}
+    <!-- ========================= -->
+    <!-- SHAP Dashboard -->
+    <!-- ========================= -->
 
-    <hr style="margin:35px 0;">
+    <div class="glass-card"
+         style="margin-top:40px;">
 
-    <h2>AI Explanation</h2>
+        <h2>
 
-    <p style="
-        line-height:1.8;
-        font-size:17px;
-    ">
-        {{ explanation }}
-    </p>
+            SHAP Explainable AI Dashboard
+
+        </h2>
+
+        <p style="color:#9ca3af;">
+
+            The chart below explains which pollutants
+            influenced the prediction made by the LSTM model.
+
+        </p>
+
+        <img
+
+            src="{{ url_for('static', filename=shap_image) }}"
+
+            alt="SHAP Feature Importance"
+
+            style="
+
+                width:100%;
+
+                max-width:1000px;
+
+                display:block;
+
+                margin:auto;
+
+                border-radius:18px;
+
+                box-shadow:0 0 25px rgba(0,255,255,.18);
+
+            "
+
+        >
+
+        <hr style="margin:40px 0;">
+
+                <h2>
+
+            Top 5 Contributing Pollutants
+
+        </h2>
+
+        {% for feature in top_features %}
+
+        <div class="glass-card"
+             style="
+                margin-top:15px;
+                padding:18px;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+             ">
+
+            <div>
+
+                <strong style="font-size:18px;">
+
+                    {{ feature.name }}
+
+                </strong>
+
+                <br>
+
+                <small style="color:#9ca3af;">
+
+                    Contribution Level
+
+                </small>
+
+            </div>
+
+            <div style="text-align:right;">
+
+                <strong>
+
+                    {{ feature.value }}
+
+                </strong>
+
+                <br>
+
+                <span style="color:#00d4ff;">
+
+                    {{ feature.impact }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        <hr style="margin:40px 0;">
+
+        <!-- ========================= -->
+        <!-- AI Explanation -->
+        <!-- ========================= -->
+
+        <div class="glass-card">
+
+            <h2>
+
+                AI Explanation
+
+            </h2>
+
+            <p style="
+                line-height:1.9;
+                font-size:17px;
+                color:#e5e7eb;
+            ">
+
+                {{ explanation }}
+
+            </p>
+
+        </div>
+
+        <br>
+
+        <!-- ========================= -->
+        <!-- Project Summary -->
+        <!-- ========================= -->
+
+        <div class="glass-card">
+
+            <h2>
+
+                Prediction Summary
+
+            </h2>
+
+            <table style="width:100%; border-collapse:collapse;">
+
+                <tr>
+
+                    <td><strong>Predicted AQI</strong></td>
+
+                    <td>{{ result }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>Confidence</strong></td>
+
+                    <td>{{ confidence }}%</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>Model</strong></td>
+
+                    <td>LSTM Neural Network</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>Explainability</strong></td>
+
+                    <td>SHAP Feature Importance</td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <br>
+
+        <div style="text-align:center;">
+
+            <button
+                onclick="window.print()"
+                class="btn btn-primary">
+
+                📄 Save / Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Footer -->
+    <!-- ========================= -->
+
+    <footer
+        style="
+            margin-top:60px;
+            text-align:center;
+            padding:30px;
+            color:#9ca3af;
+        ">
+
+        <h3>
+
+            AirPure AI
+
+        </h3>
+
+        <p>
+
+            AI-Powered Air Quality Prediction using
+            <strong>LSTM + SHAP Explainable AI</strong>
+
+        </p>
+
+        <p>
+
+            Developed by
+            <strong>S Hemanth Naidu</strong>
+
+        </p>
+
+        <p>
+
+            © 2026 AirPure AI. All Rights Reserved.
+
+        </p>
+
+    </footer>
 
 </div>
 
-</div>
 </body>
+
 </html>

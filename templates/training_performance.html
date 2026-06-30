@@ -1,44 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Model Analysis | AirPure AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
-    <div class="container">
-        <nav>
-            <a href="/">Home</a>
-            <a href="/predict_manually">Analyze Air Quality</a>
-            <a href="/training_performance" class="active">Training Performance</a>
-        </nav>
 
-        <div class="glass-card result-container">
-            <h1>Model Analysis</h1>
-            <p class="lead">Deep dive into the LSTM Neural Network training metrics and performance benchmarks.</p>
-            
-            <div style="margin-top: 3rem; border-top: 1px solid var(--glass-border); padding-top: 3rem;">
-                <h3>Accuracy & Loss Optimization</h3>
-                <p class="lead">Achieved state-of-the-art precision using a multi-layer LSTM architecture.</p>
-                <img src="{{ url_for('static', filename='training_plot.png') }}" alt="Training Performance" style="width: 100%; border-radius: 15px; margin-top: 1rem; border: 1px solid var(--glass-border);">
-            </div>
+<div class="container">
 
-            <div class="features" style="margin-top: 3rem;">
-                <div class="feature-card">
-                    <h3>98%+ Accuracy</h3>
-                    <p>Highest recorded categorical precision on the India Air Quality dataset.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>12-Feature Input</h3>
-                    <p>Considers all major pollutants including PM2.5, NO, SO2, and VOCs.</p>
-                </div>
-            </div>
+    <!-- Navigation -->
 
-            <div style="margin-top: 3rem;">
-                <a href="/predict_manually" class="btn btn-primary">Proceed to Prediction</a>
-            </div>
+    <nav>
+
+        <a href="/">Home</a>
+
+        <a href="/predict_manually">Analyze Air Quality</a>
+
+        <a href="/training_performance" class="active">
+
+            Training Performance
+
+        </a>
+
+    </nav>
+
+    <!-- Main Card -->
+
+    <div class="glass-card result-container">
+
+        <h1>Model Performance Dashboard</h1>
+
+        <p class="lead">
+
+            Training performance of the AirPure AI LSTM model
+            used for Air Quality Prediction.
+
+        </p>
+
+        <!-- Training Graph -->
+
+        <div style="margin-top:40px;">
+
+            <h2>
+
+                Training Accuracy & Loss
+
+            </h2>
+
+            <p style="color:#9ca3af;">
+
+                The graph below illustrates the learning
+                behaviour of the LSTM model during training.
+
+            </p>
+
+            <img
+
+                src="{{ url_for('static', filename='training_plot.png') }}"
+
+                alt="Training Graph"
+
+                style="
+                    width:100%;
+                    border-radius:18px;
+                    margin-top:25px;
+                    box-shadow:0 0 25px rgba(0,255,255,.18);
+                "
+
+            >
+
         </div>
+
+        <hr style="margin:45px 0;">
+
+        <!-- Statistics -->
+
+        <h2>
+
+            Model Statistics
+
+        </h2>
+
+        <div class="features">
+
+            <div class="feature-card">
+
+                <h3>🧠 Model</h3>
+
+                <p>
+
+                    Long Short-Term Memory (LSTM)
+
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h3>📊 Dataset</h3>
+
+                <p>
+
+                    India Air Quality Dataset
+
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h3>🌍 Features</h3>
+
+                <p>
+
+                    12 Atmospheric Pollutants
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr style="margin:45px 0;">
+
+        <!-- Hyperparameters -->
+
+        <h2>
+
+            Training Configuration
+
+        </h2>
+
+        <table>
+
+            <tr>
+
+                <td><strong>Architecture</strong></td>
+
+                <td>LSTM + Dense Neural Network</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>Optimizer</strong></td>
+
+                <td>Adam</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>Loss Function</strong></td>
+
+                <td>Categorical Crossentropy</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>Activation</strong></td>
+
+                <td>Softmax</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>Epochs</strong></td>
+
+                <td>100 (Early Stopping Enabled)</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>Batch Size</strong></td>
+
+                <td>32</td>
+
+            </tr>
+
+        </table>
+
+        <hr style="margin:45px 0;">
+
+        <!-- Explanation -->
+
+        <div class="glass-card">
+
+            <h2>
+
+                Model Interpretation
+
+            </h2>
+
+            <p style="line-height:1.9;">
+
+                AirPure AI employs an LSTM neural network to
+                classify Air Quality Index (AQI) categories
+                using pollutant concentration values.
+                During prediction, Explainable AI (SHAP)
+                highlights the pollutants that contribute
+                most to the model's decision, making the
+                prediction more transparent and interpretable.
+
+            </p>
+
+        </div>
+
+        <br>
+
+        <div style="text-align:center;">
+
+            <a href="/predict_manually"
+               class="btn btn-primary">
+
+                🚀 Analyze Air Quality
+
+            </a>
+
+        </div>
+
     </div>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <h3>
+
+            AirPure AI
+
+        </h3>
+
+        <p>
+
+            AI-Powered Air Quality Prediction using
+            <strong>LSTM + SHAP Explainable AI</strong>
+
+        </p>
+
+        <p>
+
+            Developed by
+            <strong>S Hemanth Naidu</strong>
+
+        </p>
+
+        <p>
+
+            © 2026 AirPure AI
+
+        </p>
+
+    </footer>
+
+</div>
+
 </body>
+
 </html>

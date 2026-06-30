@@ -4,42 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AirPure AI | Smart AQI Prediction</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta name="description" content="AirPure AI predicts Air Quality Index using LSTM Deep Learning with Explainable AI (SHAP).">
+    <meta name="author" content="S Hemanth Naidu">
 </head>
+
 <body>
-    <div class="container">
-        <nav>
-            <a href="/" class="active">Home</a>
-            <a href="/predict_manually">Analyze Air Quality</a>
-            <a href="/training_performance">Training Performance</a>
-        </nav>
 
-        <section class="hero glass-card">
-            <h1>AirPure AI</h1>
-            <p class="lead">Harnessing LSTM Neural Networks to provide real-time air quality insights with state-of-the-art precision.</p>
-            
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <h3>LSTM Powered</h3>
-                    <p>Advanced Recurrent Neural Networks designed for time-series prediction.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <h3>Global Coverage</h3>
-                    <p>Integrated with OpenWeather API for automatic real-time detection.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Instant Results</h3>
-                    <p>Get precise AQI buckets and health recommendations in milliseconds.</p>
-                </div>
+<div class="container">
+
+    <!-- Navigation -->
+
+    <nav>
+
+        <a href="/" class="active">Home</a>
+
+        <a href="/predict_manually">Analyze Air Quality</a>
+
+        <a href="/training_performance">Training Performance</a>
+
+    </nav>
+
+    <!-- Hero -->
+
+    <section class="hero glass-card">
+
+        <h1>🌍 AirPure AI</h1>
+
+        <p class="lead">
+
+            Harnessing LSTM Deep Learning and Explainable AI (SHAP)
+
+            to predict Air Quality Index with intelligent health recommendations.
+
+        </p>
+
+        <div class="features">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🧠</div>
+
+                <h3>LSTM Deep Learning</h3>
+
+                <p>
+
+                    Predicts AQI using a trained Long Short-Term Memory neural network.
+
+                </p>
+
             </div>
 
-            <div style="margin-top: 3rem;">
-                <a href="/predict_manually" class="btn btn-primary">Start Analysis</a>
+            <div class="feature-card">
+
+                <div class="feature-icon">📊</div>
+
+                <h3>Explainable AI</h3>
+
+                <p>
+
+                    SHAP explains which pollutants contributed most to each prediction.
+
+                </p>
+
             </div>
-        </section>
-    </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">⚡</div>
+
+                <h3>Instant Prediction</h3>
+
+                <p>
+
+                    Get AQI category, confidence score and health advice within seconds.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div style="margin-top:40px;">
+
+            <a href="/predict_manually" class="btn btn-primary">
+
+                🚀 Start Air Quality Analysis
+
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- Footer -->
+
+<footer>
+
+    <p>
+
+        <strong>Developed by S Hemanth Naidu</strong>
+
+    </p>
+
+    <p>
+
+        AI-Powered Air Quality Prediction using LSTM + SHAP
+
+    </p>
+
+    <p>
+
+        © 2026 AirPure AI. All Rights Reserved.
+
+    </p>
+
+</footer>
+
 </body>
+
 </html>
